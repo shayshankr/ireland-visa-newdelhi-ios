@@ -8,9 +8,6 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.shayshankrathore.irelandvisa.newdelhi
 
     scripts:
       - name: Get Flutter packages
@@ -23,12 +20,18 @@ workflows:
       - name: Flutter analyze
         script: flutter analyze --no-fatal-infos
 
-      - name: Build iOS release IPA
+      - name: Build iOS (no code signing)
         script: |
-          flutter build ipa --release \
+          flutter build ios --release --no-codesign \
             --build-name=1.0.0 \
             --build-number=1
 
     artifacts:
-      - build/ios/ipa/*.ipa
+      - build/ios/archive/*.xcarchive
       - /tmp/xcodebuild_logs/*.log
+
+    # ── To enable App Store publishing, you need: ──────────────────────────────
+    # 1. Apple Developer account (developer.apple.com/programs/enroll)
+    # 2. In Codemagic Settings > Integrations > Developer Portal > connect Apple ID
+    # 3. Add ios_signing section back with distribution_type: app_store
+    # 4. Add publishing > app_store_connect section
