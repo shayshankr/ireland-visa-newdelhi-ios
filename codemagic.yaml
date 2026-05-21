@@ -23,19 +23,12 @@ workflows:
       - name: Flutter analyze
         script: flutter analyze --no-fatal-infos
 
-      - name: Build iOS release
+      - name: Build iOS release IPA
         script: |
           flutter build ipa --release \
             --build-name=1.0.0 \
-            --build-number=$(($(app-store-connect get-latest-testflight-build-number "$APP_STORE_ID") + 1))
+            --build-number=1
 
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - flutter_drive.log
-
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_testflight: true
-        submit_to_app_store: false   # change to true when ready for production
